@@ -57,7 +57,7 @@ def main(paylod) -> Response:
     )
 
     if gads_response == True:
-        logging.log('GAds event created')
+        logging.info('GAds event created')
     else:
         logging.error('GAds event not created')
 
