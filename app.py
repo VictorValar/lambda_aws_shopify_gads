@@ -6,6 +6,13 @@
 ## TEST_EVENT_CODE
 
 ## Any suggestions or improvements are welcome! Feel free to contribute to this project or provide feedback.
+########### Core ###########
+import hashlib
+import os
+import datetime
+
+########### Google Ads ###########
+from google.ads.googleads.client import GoogleAdsClient
 import logging
 import traceback
 import time, datetime
@@ -13,6 +20,20 @@ import json
 from dotenv import load_dotenv
 import os
 from requests import Response
+
+########### Google Ads Conversions IDs ###########
+'''
+Purchase ctId=6479384616
+'''
+
+# Google Ads  Service
+DEVELOPER_TOKEN = os.getenv('DEVELOPER_TOKEN')
+CLIENT_CUSTOMER_ID = os.getenv('CLIENT_CUSTOMER_ID')
+CONVERSION_ACTION_ID = os.getenv('CONVERSION_ACTION_ID')
+CLIENT_ID = os.getenv('CLIENT_ID')
+CLIENT_SECRET = os.getenv('CLIENT_SECRET')
+REFRESH_TOKEN = os.getenv('REFRESH_TOKEN')
+ENV = os.getenv('ENV')
 
 def lambda_handler(event, context):
 
@@ -41,7 +62,7 @@ def main(paylod) -> Response:
     Sends events to Google Ads
     '''
     for item in paylod.get('note_attributes'):
-        if item["name"] == "gclidCookie":
+        if item["name"] == "aditional_info_gclid":
             gclid = item["value"]
 
     if gclid == 'Not Found':
@@ -51,7 +72,7 @@ def main(paylod) -> Response:
 
     ## GAds Purchase Event
     gads_response = send_event(
-        conversion_action_id='6479384616',
+        conversion_action_id=CONVERSION_ACTION_ID,
         conversion_value=float(paylod.get('total_price')),
         gclid=gclid
     )
@@ -63,18 +84,7 @@ def main(paylod) -> Response:
 
     return gads_response
 
-########### Core ###########
-import hashlib
-import os
-import datetime
 
-########### Google Ads ###########
-from google.ads.googleads.client import GoogleAdsClient
-
-########### Google Ads Conversions IDs ###########
-'''
-Purchase ctId=6479384616
-'''
 
 def send_event(
     conversion_action_id,
@@ -84,7 +94,7 @@ def send_event(
     conversion_custom_variable_value=None,
     gbraid=None,
     wbraid=None,
-    customer_id='3340873698'
+    customer_id=CLIENT_CUSTOMER_ID
 ):
     """Creates a click conversion with a default currency of USD.
 
@@ -107,12 +117,7 @@ def send_event(
         wbraid: The WBRAID for the iOS app conversion. If set, the gclid and
             gbraid parameters must be None.
     """
-    # Google Ads  Service
-    DEVELOPER_TOKEN = os.getenv('DEVELOPER_TOKEN')
-    CLIENT_ID = os.getenv('CLIENT_ID')
-    CLIENT_SECRET = os.getenv('CLIENT_SECRET')
-    REFRESH_TOKEN = os.getenv('REFRESH_TOKEN')
-    ENV = os.getenv('ENV')
+
 
     #### Auth ####
     gds_auth = {
@@ -120,7 +125,7 @@ def send_event(
         'client_id': CLIENT_ID,
         'client_secret': CLIENT_SECRET,
         'refresh_token': REFRESH_TOKEN,
-        'login-customer-id':'3340873698',
+        'login-customer-id': CLIENT_CUSTOMER_ID,
         'use_proto_plus': True
     }
     # client = GoogleAdsClient.load_from_env()
