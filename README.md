@@ -7,6 +7,7 @@ The app.py file contains the lambda function that is triggered by AWS Event Brid
 ### 1. Create .env file
 You must have an .env file in the root directory of the project with the variables described in update_env_vars.py.
 Please refer to the [Google Ads API documentation](https://developers.google.com/google-ads/api/docs/oauth/overview) for more information on how to create the Google Ads API credentials.
+The google ads functions code comes from [Google's documentation](https://developers.google.com/google-ads/api/docs/conversions/upload-clicks).
 
 ### 2. Create a fuction in AWS Lambda
 You may create the function either via AWS UI or via the AWS CLI.
