@@ -1,6 +1,6 @@
 # V
 get_campaigns.py
-
+data/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

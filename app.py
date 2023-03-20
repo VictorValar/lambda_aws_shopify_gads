@@ -1,9 +1,4 @@
 ## AWS Lambda function to process Shopify webhooks.
-## If you want to use this function, you need to create a .env file with the following variables:
-## META_ACCESS_TOKEN
-## PIXEL_ID
-## SHOPIFY_ACCESS_TOKEN
-## TEST_EVENT_CODE
 
 ## Any suggestions or improvements are welcome! Feel free to contribute to this project or provide feedback.
 ########### Core ###########
@@ -34,6 +29,7 @@ CLIENT_ID = os.getenv('CLIENT_ID')
 CLIENT_SECRET = os.getenv('CLIENT_SECRET')
 REFRESH_TOKEN = os.getenv('REFRESH_TOKEN')
 ENV = os.getenv('ENV')
+TOKEN_URI = os.getenv('TOKEN_URI')
 
 def lambda_handler(event, context):
 
@@ -54,7 +50,8 @@ def lambda_handler(event, context):
         logging.error(excp)
         return {
             'statusCode': 400 if type(excp) == ValueError else 500,
-            'body': 'event not sent: ' + str(excp) + ' ' + str(traceback.format_exc())
+            'body': 'event not sent: ' + str(excp) + ' ' + str(traceback.format_exc()),
+            'refresh': REFRESH_TOKEN
         }
 
 def main(paylod) -> Response:
@@ -126,7 +123,8 @@ def send_event(
         'client_secret': CLIENT_SECRET,
         'refresh_token': REFRESH_TOKEN,
         'login-customer-id': CLIENT_CUSTOMER_ID,
-        'use_proto_plus': True
+        'use_proto_plus': True,
+        # 'endpoint': TOKEN_URI
     }
     # client = GoogleAdsClient.load_from_env()
     client = GoogleAdsClient.load_from_dict(config_dict=gds_auth)
